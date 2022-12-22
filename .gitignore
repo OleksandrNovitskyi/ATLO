@@ -1,0 +1,5 @@
+__pycache__/
+tmp*
+readme
+node_modules/
+site-packages/
