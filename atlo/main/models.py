@@ -10,7 +10,8 @@ class User(models.Model):
 
 
 class Trafic(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     from_left = models.IntegerField(default=0)
     from_right = models.IntegerField(default=0)
     from_top = models.IntegerField(default=0)
