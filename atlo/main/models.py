@@ -19,11 +19,11 @@ class Trafic(models.Model):
     def __str__(self):
         return (
             "from left -"
-            + self.from_left
-            + "from right -"
-            + self.from_right
-            + "from top -"
-            + self.from_top
-            + "from bottom -"
-            + self.from_bottom
+            + str(self.from_left)
+            + " from right -"
+            + str(self.from_right)
+            + " from top -"
+            + str(self.from_top)
+            + " from bottom -"
+            + str(self.from_bottom)
         )
