@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
 
+{% load static %}
+
 <head>
   <title>ATLO</title>
-  <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
   <meta charset="UTF-8" />
   <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 </head>
@@ -12,8 +15,9 @@
   <div>
     <header class="bg-current">
       <form action="" class="text-blue-600 py-2">
-        Name: <input type="text" name="login">
-        Email: <input type="text" name="email">
+        Name: <input type="text" placeholder="Your name" inputmode="latin-name" required name="login">
+        Email: <input type="text" placeholder="your_email@email.com" inputmode="email" required name="email">
+        <button type="button" class="rounded-full px-5 py-1 text-white bg-green-500 hover:bg-green-700">Save</button>
         <input class="rounded-full px-5 py-1 text-white bg-green-500 hover:bg-green-700" type="submit" value="Save">
         <input class="rounded-full px-5 py-1 text-white bg-green-500 hover:bg-green-700" type="submit" value="Load">
       </form>
@@ -22,31 +26,32 @@
       <div></div>
       <div class="bg-slate-400 flex items-center justify-center">
         <p><b>Number of trafic</b><br>
-          <input type="text" size="15">
+          <input type="text" name="from_top" inputmode="numeric" required size="15" value="0">
         </p>
       </div>
       <div></div>
       <div class="bg-slate-400 flex items-center justify-center">
         <p><b>Number of trafic</b><br>
-          <input type="text" size="15">
+          <input type="text" name="from_left" inputmode="numeric" required size="15" value="0">
         </p>
       </div>
-      <div class="bg-slate-400 flex items-center justify-center
-      grid grid-cols-2">
-        <div class="text-green-700 text-4xl flex items-center justify-center">&#129091; 40</div>
-        <div class="text-red-700 text-4xl flex items-center justify-center">&#129088; 25</div>
+      <div class="bg-slate-400 flex items-center justify-center grid grid-cols-2">
+        <div class="text-green-700 text-4xl flex items-center justify-center">&#129091; {{ <span>time_l_r</span> }}40
+        </div>
+        <div class="text-red-700 text-4xl flex items-center justify-center">&#129088; {{ <span>time_t_b</span> }}25
+        </div>
         <div class="text-red-700 text-4xl flex items-center justify-center">&#129090; 25</div>
         <div class="text-green-700 text-4xl flex items-center justify-center">&#129089; 40</div>
       </div>
       <div class="bg-slate-400 flex items-center justify-center">
         <p><b>Number of trafic</b><br>
-          <input type="text" size="15">
+          <input type="text" name="from_right" inputmode="numeric" required size="15" value="0">
         </p>
       </div>
       <div></div>
       <div class="bg-slate-400 flex items-center justify-center">
         <p><b>Number of trafic</b><br>
-          <input type="text" size="15">
+          <input type="text" name="from_bottom" inputmode="numeric" required size="15" value="0">
         </p>
       </div>
       <div></div>

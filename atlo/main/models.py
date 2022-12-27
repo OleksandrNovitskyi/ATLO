@@ -8,8 +8,12 @@ class User(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Site user"
+        verbose_name_plural = "Site users"
 
-class Trafic(models.Model):
+
+class Traffic(models.Model):
     # user = models.ForeignKey(User, on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     from_left = models.IntegerField(default=0)
@@ -28,3 +32,7 @@ class Trafic(models.Model):
             + " from bottom -"
             + str(self.from_bottom)
         )
+
+    class Meta:
+        verbose_name = "Traffic size"
+        verbose_name_plural = "Traffic sizes"
