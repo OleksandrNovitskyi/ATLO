@@ -14,12 +14,13 @@
 <body class="bg-green-500">
   <div>
     <header class="bg-current">
-      <form action="" class="text-blue-600 py-2">
-        Name: <input type="text" placeholder="Your name" inputmode="latin-name" required name="login">
-        Email: <input type="text" placeholder="your_email@email.com" inputmode="email" required name="email">
-        <button type="button" class="rounded-full px-5 py-1 text-white bg-green-500 hover:bg-green-700">Save</button>
-        <input class="rounded-full px-5 py-1 text-white bg-green-500 hover:bg-green-700" type="submit" value="Save">
-        <input class="rounded-full px-5 py-1 text-white bg-green-500 hover:bg-green-700" type="submit" value="Load">
+      <form action="" method="post" class="text-blue-600 py-2">
+        <!-- Name: <input type="text" placeholder="Your name" inputmode="latin-name" required name="login">
+        Email: <input type="text" placeholder="your_email@email.com" inputmode="email" required name="email"> -->
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="rounded-full px-5 py-1 text-white bg-green-500 hover:bg-green-700">Save</button>
+        <button type="button" class="rounded-full px-5 py-1 text-white bg-green-500 hover:bg-green-700">Load</button>
       </form>
     </header>
     <div class="grid grid-cols-3 auto-rows-[250px] text-orange-700 ">
@@ -36,12 +37,12 @@
         </p>
       </div>
       <div class="bg-slate-400 flex items-center justify-center grid grid-cols-2">
-        <div class="text-green-700 text-4xl flex items-center justify-center">&#129091; {{ <span>time_l_r</span> }}40
+        <div class="text-green-700 text-4xl flex items-center justify-center">&#129091; {{ time_t_b }}
         </div>
-        <div class="text-red-700 text-4xl flex items-center justify-center">&#129088; {{ <span>time_t_b</span> }}25
+        <div class="text-red-700 text-4xl flex items-center justify-center">&#129088; {{ time_l_r }}
         </div>
-        <div class="text-red-700 text-4xl flex items-center justify-center">&#129090; 25</div>
-        <div class="text-green-700 text-4xl flex items-center justify-center">&#129089; 40</div>
+        <div class="text-red-700 text-4xl flex items-center justify-center">&#129090; {{ time_l_r }}</div>
+        <div class="text-green-700 text-4xl flex items-center justify-center">&#129089; {{ time_t_b }}</div>
       </div>
       <div class="bg-slate-400 flex items-center justify-center">
         <p><b>Number of trafic</b><br>
