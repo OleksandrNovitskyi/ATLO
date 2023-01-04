@@ -1,15 +1,12 @@
 # from django.http import HttpResponse
 # from django.template import loader
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from .forms import UserForm
 from .models import User, Traffic
 
 
 def index(request):
-    # user = register(request)
-    # traf = get_traffic(request)
-
     # user = User.objects.all()
     form = UserForm()
 
