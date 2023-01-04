@@ -12,12 +12,6 @@ class CreateUserForm(UserCreationForm):
         fields = ["username", "email", "password1", "password2"]
 
 
-# class UserForm(ModelForm):
-#     class Meta:
-#         model = User
-#         fields = "__all__"
-
-
 class TrafficForm(ModelForm):
     class Meta:
         model = Traffic

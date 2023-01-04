@@ -3,6 +3,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+
 
 from .forms import CreateUserForm, TrafficForm
 from .models import Traffic
@@ -43,6 +46,8 @@ def registerPage(request):
             # if form_traffic.is_valid():
             #     form_traffic.save()
             form.save()
+            user = form.cleaned_data.get("username")
+            messages.success(request, "Account was created for " + user)
             return redirect("main:login")
     # context = {"form": form, "form_traffic": form_traffic}
     context = {"form": form}
@@ -50,14 +55,21 @@ def registerPage(request):
 
 
 def loginPage(request):
-    form = CreateUserForm()
 
     if request.method == "POST":
-        form = CreateUserForm(request.POST)
-        if form.is_valid():
-            form.save()
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
 
-    context = {"form": form}
+        user = authenticate(request, username=username, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect("main:index")
+        else:
+            messages.info(request, "Username, email or password is wrong")
+
+    context = {}
     return render(request, "main/login.html", context)
 
 
