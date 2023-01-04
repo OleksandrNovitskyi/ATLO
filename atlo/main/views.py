@@ -1,26 +1,29 @@
 # from django.http import HttpResponse
 # from django.template import loader
 from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
-from .forms import UserForm
-from .models import User, Traffic
+from .forms import CreateUserForm, TrafficForm
+from .models import Traffic
 
 
 def index(request):
     # user = User.objects.all()
-    form = UserForm()
+    # form = UserForm()
 
-    if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            form.save()
+    # if request.method == "POST":
+    #     form = UserForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
 
-    user1 = User.objects.first()
-    traffic = Traffic.objects.get(pk=user1.pk)
-    time_l_r, time_t_b = timing_traffic_lights(traffic)
+    # user1 = User.objects.first()
+    # traffic = Traffic.objects.get(pk=user1.pk)
+    # time_l_r, time_t_b = timing_traffic_lights(traffic)
     # template = loader.get_template("main/index.html")
 
-    context = {"form": form, "time_l_r": time_l_r, "time_t_b": time_t_b}
+    # context = {"form": form, "time_l_r": time_l_r, "time_t_b": time_t_b}
+    context = {}
     return render(request, "main/index.html", context)
     # context = {
     #     "latest_question_list": latest_question_list,
@@ -28,19 +31,34 @@ def index(request):
     # return HttpResponse(template.render(context, request))
 
 
-def register(request):
-    user = {request.POST.get("login"): request.POST.get("email")}
-    return user
+def registerPage(request):
+    form = CreateUserForm()
+    # form_traffic = TrafficForm()
+
+    if request.method == "POST":
+        form = CreateUserForm(request.POST)
+        # form_traffic = TrafficForm(request.POST)
+        if form.is_valid():
+            # form.save(commit=False)
+            # if form_traffic.is_valid():
+            #     form_traffic.save()
+            form.save()
+            return redirect("main:login")
+    # context = {"form": form, "form_traffic": form_traffic}
+    context = {"form": form}
+    return render(request, "main/register.html", context)
 
 
-def get_traffic(request):
-    traf = {
-        "from_left": request.POST.get("from_left"),
-        "from_right": request.POST.get("from_right"),
-        "from_top": request.POST.get("from_top"),
-        "from_bottom": request.POST.get("from_bottom"),
-    }
-    return traf
+def loginPage(request):
+    form = CreateUserForm()
+
+    if request.method == "POST":
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+    context = {"form": form}
+    return render(request, "main/login.html", context)
 
 
 def timing_traffic_lights(traffic):
