@@ -1,5 +1,3 @@
-# from django.http import HttpResponse
-# from django.template import loader
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -41,18 +39,8 @@ def registerPage(request):
     if request.method == "POST":
         form = CreateUserForm(request.POST)
         form_traffic = TrafficForm(request.POST)
-        # form_traffic.user = form.id
-
         if form.is_valid():
             user = form.save()
-            print(user)
-            # form_traffic.user = user.username
-            print(form_traffic.is_valid())
-
-            for field in form_traffic:
-                print("Field Error:", field.name, field.errors)
-
-            # print(form_traffic.user_id)
             if form_traffic.is_valid():
                 traffic = form_traffic.save(commit=False)
                 traffic.user_id = user.id
@@ -104,14 +92,3 @@ def timing_traffic_lights(traffic):
     time_t_b = max_cycle_time - time_l_r
 
     return time_l_r, time_t_b
-
-
-# def create_output(input):
-#     """Create files with results of calculations"""
-#     traffic = input.trafic
-#     time_lf_rt, time_tp_btm = timing_traffic_lights(traffic)
-#     result = {"time_lf_rt": time_lf_rt, "time_tp_btm": time_tp_btm}
-#     str_res = "result = " + str(result)
-#     file_name = "output_{}.py".format(input.__name__[-1])
-#     with open(file_name, "w", encoding="utf8") as file:
-#         file.write(str_res)
