@@ -1,56 +1,43 @@
-<!DOCTYPE html>
-<html>
+{% extends 'main/main.html' %}
 
-{% load static %}
+{% block content %}
 
-<head>
-  <title>ATLO</title>
 
-  <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
-  <meta charset="UTF-8" />
-  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-</head>
-
-<body class="bg-green-500">
-  <div>
-    <header class="bg-current">
-    </header>
-    <div class="grid grid-cols-3 auto-rows-[250px] text-orange-700 ">
-      <div></div>
-      <div class="bg-slate-400 flex items-center justify-center">
-        <p><b>Number of trafic</b><br>
-          <input type="text" name="from_top" inputmode="numeric" required size="15" value="0">
-        </p>
-      </div>
-      <div></div>
-      <div class="bg-slate-400 flex items-center justify-center">
-        <p><b>Number of trafic</b><br>
-          <input type="text" name="from_left" inputmode="numeric" required size="15" value="0">
-        </p>
-      </div>
-      <div class="bg-slate-400 flex items-center justify-center grid grid-cols-2">
-        <div class="text-green-700 text-4xl flex items-center justify-center">&#129091; {{ time_t_b }}
-        </div>
-        <div class="text-red-700 text-4xl flex items-center justify-center">&#129088; {{ time_l_r }}
-        </div>
-        <div class="text-red-700 text-4xl flex items-center justify-center">&#129090; {{ time_l_r }}</div>
-        <div class="text-green-700 text-4xl flex items-center justify-center">&#129089; {{ time_t_b }}</div>
-      </div>
-      <div class="bg-slate-400 flex items-center justify-center">
-        <p><b>Number of trafic</b><br>
-          <input type="text" name="from_right" inputmode="numeric" required size="15" value="0">
-        </p>
-      </div>
-      <div></div>
-      <div class="bg-slate-400 flex items-center justify-center">
-        <p><b>Number of trafic</b><br>
-          <input type="text" name="from_bottom" inputmode="numeric" required size="15" value="0">
-        </p>
-      </div>
-      <div></div>
-    </div>
+<div class="grid grid-cols-3 auto-rows-[250px] text-orange-700 bg-lime-600">
+  <div></div>
+  <div class="bg-slate-400 flex items-center justify-center">
+    <p><b>Number of trafic</b><br>
+      <input type="text" name="from_top" inputmode="numeric" required size="15" value="{{ form_traffic.from_top }}">
+    </p>
   </div>
+  <div></div>
+  <div class="bg-slate-400 flex items-center justify-center">
+    <p><b>Number of trafic</b><br>
+      <input type="text" name="from_left" inputmode="numeric" required size="15" value="{{ form_traffic.from_left }}">
+    </p>
+  </div>
+  <div class="bg-slate-400 flex items-center justify-center grid grid-cols-2">
+    <div class="text-green-700 text-4xl flex items-center justify-center">&#129091; {{ time_t_b }}
+    </div>
+    <div class="text-red-700 text-4xl flex items-center justify-center">&#129088; {{ time_l_r }}
+    </div>
+    <div class="text-red-700 text-4xl flex items-center justify-center">&#129090; {{ time_l_r }}</div>
+    <div class="text-green-700 text-4xl flex items-center justify-center">&#129089; {{ time_t_b }}</div>
+  </div>
+  <div class="bg-slate-400 flex items-center justify-center">
+    <p><b>Number of trafic</b><br>
+      <input type="text" name="from_right" inputmode="numeric" required size="15" value="{{ form_traffic.from_right }}">
+    </p>
+  </div>
+  <div></div>
+  <div class="bg-slate-400 flex items-center justify-center">
+    <p><b>Number of trafic</b><br>
+      <input type="text" name="from_bottom" inputmode="numeric" required size="15"
+        value="{{ form_traffic.from_bottom }}">
+    </p>
+  </div>
+  <div></div>
+</div>
 
-</body>
 
-</html>
+{% endblock %}

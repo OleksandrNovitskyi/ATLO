@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-
+from django.db import transaction
 
 from .forms import CreateUserForm, TrafficForm
 from .models import Traffic
@@ -34,23 +34,33 @@ def index(request):
     # return HttpResponse(template.render(context, request))
 
 
+@transaction.atomic  # if something wrong - nofing save to DB
 def registerPage(request):
     form = CreateUserForm()
-    # form_traffic = TrafficForm()
-
+    form_traffic = TrafficForm()
     if request.method == "POST":
         form = CreateUserForm(request.POST)
-        # form_traffic = TrafficForm(request.POST)
+        form_traffic = TrafficForm(request.POST)
+        # form_traffic.user = form.id
+
         if form.is_valid():
-            # form.save(commit=False)
-            # if form_traffic.is_valid():
-            #     form_traffic.save()
-            form.save()
-            user = form.cleaned_data.get("username")
-            messages.success(request, "Account was created for " + user)
-            return redirect("main:login")
-    # context = {"form": form, "form_traffic": form_traffic}
-    context = {"form": form}
+            user = form.save()
+            print(user)
+            # form_traffic.user = user.username
+            print(form_traffic.is_valid())
+
+            for field in form_traffic:
+                print("Field Error:", field.name, field.errors)
+
+            # print(form_traffic.user_id)
+            if form_traffic.is_valid():
+                traffic = form_traffic.save(commit=False)
+                traffic.user_id = user.id
+                traffic.save()
+                user = form.cleaned_data.get("username")
+                messages.success(request, "Account was created for " + user)
+                return redirect("main:login")
+    context = {"form": form, "form_traffic": form_traffic}
     return render(request, "main/register.html", context)
 
 
@@ -71,6 +81,11 @@ def loginPage(request):
 
     context = {}
     return render(request, "main/login.html", context)
+
+
+def logoutUser(request):
+    logout(request)
+    return redirect("main:login")
 
 
 def timing_traffic_lights(traffic):

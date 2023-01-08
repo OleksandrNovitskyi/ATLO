@@ -1,21 +1,9 @@
 from django.db import models
-
-
-class User(models.Model):
-    name = models.CharField(max_length=200, null=True)
-    email = models.EmailField(null=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Site user"
-        verbose_name_plural = "Site users"
+from django.contrib.auth.models import User
 
 
 class Traffic(models.Model):
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
     from_left = models.IntegerField(default=0, null=True)
     from_right = models.IntegerField(default=0, null=True)
     from_top = models.IntegerField(default=0, null=True)
@@ -36,3 +24,18 @@ class Traffic(models.Model):
     class Meta:
         verbose_name = "Traffic size"
         verbose_name_plural = "Traffic sizes"
+
+
+class Results(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
+    time_lf_rt = models.IntegerField(default=0)
+    time_tp_bm = models.IntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return (
+            "Green time from left to right :"
+            + str(self.time_lf_rt)
+            + " Green time from top to bottom :"
+            + str(self.time_tp_bm)
+        )
