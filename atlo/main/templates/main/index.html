@@ -4,7 +4,10 @@
 
 
 <div class="grid grid-cols-3 auto-rows-[250px] text-orange-700 bg-lime-600">
-  <div></div>
+  <div>
+    <p class="m-2 text-white decoration-solid text-xl">Hello {{ user.username }}</p>
+    <p><a href="{% url 'main:login'%}" class="m-2 text-indigo-600">Logout</a></p>
+  </div>
   <div class="bg-slate-400 flex items-center justify-center">
     <p><b>Number of trafic</b><br>
       <input type="text" name="from_top" inputmode="numeric" required size="15" value="{{ form_traffic.from_top }}">
@@ -17,12 +20,21 @@
     </p>
   </div>
   <div class="bg-slate-400 flex items-center justify-center grid grid-cols-2">
-    <div class="text-green-700 text-4xl flex items-center justify-center">&#129091; {{ time_t_b }}
+    <div
+      class="text-xl m-auto font-bold text-green-700 rounded-full bg-slate-400 flex items-center justify-center border-8 border-green-700 h-20 w-20">
+      &#129091;
+      {{ time_t_b }}
     </div>
-    <div class="text-red-700 text-4xl flex items-center justify-center">&#129088; {{ time_l_r }}
+    <div
+      class="text-xl m-auto font-bold text-red-700 rounded-full bg-slate-400 flex items-center justify-center border-8 border-red-700 h-20 w-20">
+      &#129088; {{ time_l_r }}
     </div>
-    <div class="text-red-700 text-4xl flex items-center justify-center">&#129090; {{ time_l_r }}</div>
-    <div class="text-green-700 text-4xl flex items-center justify-center">&#129089; {{ time_t_b }}</div>
+    <div
+      class="text-xl m-auto font-bold text-red-700 rounded-full bg-slate-400 flex items-center justify-center border-8 border-red-700 h-20 w-20">
+      &#129090; {{ time_l_r }}</div>
+    <div
+      class="text-xl m-auto font-bold text-green-700 rounded-full bg-slate-400 flex items-center justify-center border-8 border-green-700 h-20 w-20">
+      &#129089; {{ time_t_b }}</div>
   </div>
   <div class="bg-slate-400 flex items-center justify-center">
     <p><b>Number of trafic</b><br>
@@ -36,7 +48,11 @@
         value="{{ form_traffic.from_bottom }}">
     </p>
   </div>
-  <div></div>
+  <div>
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      Calculate
+    </button>
+  </div>
 </div>
 
 

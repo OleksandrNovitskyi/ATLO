@@ -10,8 +10,8 @@ from .models import Traffic
 
 
 def index(request):
-    # user = User.objects.all()
-    # form = UserForm()
+    user = request.user
+    form = CreateUserForm()
 
     # if request.method == "POST":
     #     form = UserForm(request.POST)
@@ -19,17 +19,16 @@ def index(request):
     #         form.save()
 
     # user1 = User.objects.first()
-    # traffic = Traffic.objects.get(pk=user1.pk)
-    # time_l_r, time_t_b = timing_traffic_lights(traffic)
-    # template = loader.get_template("main/index.html")
+    traffic = Traffic.objects.get(pk=user.pk)
+    time_l_r, time_t_b = timing_traffic_lights(traffic)
 
-    # context = {"form": form, "time_l_r": time_l_r, "time_t_b": time_t_b}
-    context = {}
+    context = {
+        "form": form,
+        "form_traffic": traffic,
+        "time_l_r": time_l_r,
+        "time_t_b": time_t_b,
+    }
     return render(request, "main/index.html", context)
-    # context = {
-    #     "latest_question_list": latest_question_list,
-    # }
-    # return HttpResponse(template.render(context, request))
 
 
 @transaction.atomic  # if something wrong - nofing save to DB
