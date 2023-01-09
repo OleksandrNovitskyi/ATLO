@@ -7,23 +7,16 @@ from django.db import transaction
 
 from .forms import CreateUserForm, TrafficForm
 from .models import Traffic
+from . import logic
 
 
 def index(request):
     user = request.user
-    form = CreateUserForm()
 
-    # if request.method == "POST":
-    #     form = UserForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-
-    # user1 = User.objects.first()
     traffic = Traffic.objects.get(pk=user.pk)
-    time_l_r, time_t_b = timing_traffic_lights(traffic)
+    time_l_r, time_t_b = logic.timing_traffic_lights(traffic)
 
     context = {
-        "form": form,
         "form_traffic": traffic,
         "time_l_r": time_l_r,
         "time_t_b": time_t_b,
@@ -73,21 +66,3 @@ def loginPage(request):
 def logoutUser(request):
     logout(request)
     return redirect("main:login")
-
-
-def timing_traffic_lights(traffic):
-    """
-    traffic - QuerySet of traffic number in each lane
-
-    return green time at line left-righr, green time at line top-bottom
-    """
-    max_cycle_time = 120
-    sum_traf_l_r = traffic.from_left + traffic.from_right
-    sum_traf_t_b = traffic.from_top + traffic.from_bottom
-
-    time_l_r = sum_traf_l_r * max_cycle_time // (sum_traf_l_r + sum_traf_t_b)
-    if time_l_r < 15:
-        time_l_r = 15
-    time_t_b = max_cycle_time - time_l_r
-
-    return time_l_r, time_t_b
