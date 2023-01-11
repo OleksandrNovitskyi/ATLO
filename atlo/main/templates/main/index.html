@@ -3,7 +3,9 @@
 {% block content %}
 
 
-<div class="grid grid-cols-3 auto-rows-[250px] text-orange-700 bg-lime-600">
+<!-- <div class="grid grid-cols-3 auto-rows-[250px] text-orange-700 bg-lime-600"> -->
+<form class="grid grid-cols-3 auto-rows-[250px] text-orange-700 bg-lime-600" method="post" action="">
+  {% csrf_token %}
   <div>
     <p class="m-2 text-white decoration-solid text-xl">Hello {{ user.username }}</p>
     <p><a href="{% url 'main:login'%}" class="m-2 text-indigo-600">Logout</a></p>
@@ -16,7 +18,7 @@
   <div></div>
   <div class="bg-slate-400 flex items-center justify-center">
     <p><b>Number of trafic</b><br>
-      <input type="text" name="from_left" inputmode="numeric" required size="15" value="{{ form_traffic.from_left }}">
+      <input type="text" name="from_left" inputmode="numeric" required size="15" value="{{ form_traffic.from_left }}" />
     </p>
   </div>
   <div class="bg-slate-400 flex items-center justify-center grid grid-cols-2">
@@ -38,7 +40,8 @@
   </div>
   <div class="bg-slate-400 flex items-center justify-center">
     <p><b>Number of trafic</b><br>
-      <input type="text" name="from_right" inputmode="numeric" required size="15" value="{{ form_traffic.from_right }}">
+      <input type="text" formmethod="post" name="from_right" inputmode="numeric" required size="15"
+        value="{{ form_traffic.from_right }}">
     </p>
   </div>
   <div></div>
@@ -49,10 +52,12 @@
     </p>
   </div>
   <div>
-    <a href="#"
-      class="px-6 py-3 text-blue-100 no-underline bg-blue-500 rounded hover:bg-blue-600 hover:underline hover:text-blue-200">Calculate</a>
+    <input type="submit" value='Calculate' name='calculate' />
+    <!-- <a href="#"
+      class="px-6 py-3 text-blue-100 no-underline bg-blue-500 rounded hover:bg-blue-600 hover:underline hover:text-blue-200">Calculate</a> -->
   </div>
-</div>
+</form>
+<!-- </div> -->
 
 
 {% endblock %}

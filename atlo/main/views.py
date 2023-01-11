@@ -14,6 +14,37 @@ def index(request):
     user = request.user
 
     traffic = Traffic.objects.get(pk=user.pk)
+
+    traffic2 = {
+        "from_left": request.POST.get("from_left"),
+        "from_right": request.POST.get("from_right"),
+        "from_top": request.POST.get("from_top"),
+        "from_bottom": request.POST.get("from_bottom"),
+    }
+    same_value = (
+        traffic.from_bottom == int(traffic2["from_bottom"])
+        and traffic.from_left == int(traffic2["from_left"])
+        and traffic.from_right == int(traffic2["from_right"])
+        and traffic.from_top == int(traffic2["from_top"])
+    )
+    print(same_value)
+    empty_traffic2 = (
+        traffic2["from_bottom"] == None
+        and traffic2["from_left"] == None
+        and traffic2["from_right"] == None
+        and traffic2["from_top"] == None
+    )
+    if same_value or empty_traffic2:
+        pass
+    else:
+        if request.method == "POST":
+            form_traffic = TrafficForm(request.POST)
+            traffic.from_bottom = int(traffic2["from_bottom"])
+            traffic.from_left = int(traffic2["from_left"])
+            traffic.from_right = int(traffic2["from_right"])
+            traffic.from_top = int(traffic2["from_top"])
+            if form_traffic.is_valid():
+                traffic.save()
     time_l_r, time_t_b = logic.timing_traffic_lights(traffic)
 
     context = {
@@ -66,3 +97,17 @@ def loginPage(request):
 def logoutUser(request):
     logout(request)
     return redirect("main:login")
+
+
+# def get_new_traffic(request):
+#     print(request.POST)
+#     print(request.method)
+#     new_traffic = {
+#         "from_left": request.POST.get("from_left"),
+#         "from_right": request.POST.get("from_right"),
+#         "from_top": request.POST.get("from_top"),
+#         "from_bottom": request.POST.get("from_bottom"),
+#     }
+#     print(new_traffic)
+#     context = {}
+#     return render(request, "main/index.html", context)

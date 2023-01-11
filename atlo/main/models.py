@@ -18,7 +18,7 @@ class Traffic(models.Model):
 
 
 class Results(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     time_lf_rt = models.IntegerField()  # Time of green light in left-right direction
     time_tp_bm = models.IntegerField()  # Time of green light in top-bottom direction
     created = models.DateTimeField(auto_now_add=True)
