@@ -6,51 +6,62 @@ from django.contrib.auth import authenticate, login, logout
 from django.db import transaction
 
 from .forms import CreateUserForm, TrafficForm
-from .models import Traffic
+from .models import Traffic, Results
 from . import logic
 
 
 def index(request):
     user = request.user
+    try:
+        traffic = Traffic.objects.get(pk=user.pk)
+    except Traffic.DoesNotExist:
+        traffic = None
+    # traffic = Traffic.objects.get(pk=user.pk)
 
-    traffic = Traffic.objects.get(pk=user.pk)
-
-    traffic2 = {
+    new_traffic = {
         "from_left": request.POST.get("from_left"),
         "from_right": request.POST.get("from_right"),
         "from_top": request.POST.get("from_top"),
         "from_bottom": request.POST.get("from_bottom"),
     }
-    same_value = (
-        traffic.from_bottom == int(traffic2["from_bottom"])
-        and traffic.from_left == int(traffic2["from_left"])
-        and traffic.from_right == int(traffic2["from_right"])
-        and traffic.from_top == int(traffic2["from_top"])
+
+    empty_new_traffic = (
+        new_traffic["from_bottom"] is None
+        or new_traffic["from_left"] is None
+        or new_traffic["from_right"] is None
+        or new_traffic["from_top"] is None
     )
-    print(same_value)
-    empty_traffic2 = (
-        traffic2["from_bottom"] == None
-        and traffic2["from_left"] == None
-        and traffic2["from_right"] == None
-        and traffic2["from_top"] == None
-    )
-    if same_value or empty_traffic2:
-        pass
+    if not empty_new_traffic:
+        same_value = (
+            traffic.from_bottom == int(new_traffic["from_bottom"])
+            and traffic.from_left == int(new_traffic["from_left"])
+            and traffic.from_right == int(new_traffic["from_right"])
+            and traffic.from_top == int(new_traffic["from_top"])
+        )
     else:
+        same_value = False
+
+    if not same_value:
         if request.method == "POST":
             form_traffic = TrafficForm(request.POST)
-            traffic.from_bottom = int(traffic2["from_bottom"])
-            traffic.from_left = int(traffic2["from_left"])
-            traffic.from_right = int(traffic2["from_right"])
-            traffic.from_top = int(traffic2["from_top"])
+            traffic.from_bottom = int(new_traffic["from_bottom"])
+            traffic.from_left = int(new_traffic["from_left"])
+            traffic.from_right = int(new_traffic["from_right"])
+            traffic.from_top = int(new_traffic["from_top"])
             if form_traffic.is_valid():
                 traffic.save()
     time_l_r, time_t_b = logic.timing_traffic_lights(traffic)
 
+    results = Results()
+    results.user = user
+    results.time_lf_rt = time_l_r
+    results.time_tp_bm = time_t_b
+    results.save()
+
     context = {
         "form_traffic": traffic,
-        "time_l_r": time_l_r,
-        "time_t_b": time_t_b,
+        "time_lf_rt": time_l_r,
+        "time_tp_bm": time_t_b,
     }
     return render(request, "main/index.html", context)
 
@@ -97,17 +108,3 @@ def loginPage(request):
 def logoutUser(request):
     logout(request)
     return redirect("main:login")
-
-
-# def get_new_traffic(request):
-#     print(request.POST)
-#     print(request.method)
-#     new_traffic = {
-#         "from_left": request.POST.get("from_left"),
-#         "from_right": request.POST.get("from_right"),
-#         "from_top": request.POST.get("from_top"),
-#         "from_bottom": request.POST.get("from_bottom"),
-#     }
-#     print(new_traffic)
-#     context = {}
-#     return render(request, "main/index.html", context)
