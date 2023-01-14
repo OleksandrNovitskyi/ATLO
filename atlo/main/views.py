@@ -9,7 +9,7 @@ from .forms import CreateUserForm, TrafficForm
 from .models import Traffic, Results
 from . import logic
 
-
+# @transaction.atomic
 def index(request):
     user = request.user
     try:
