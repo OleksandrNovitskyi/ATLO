@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    {% load static %}
+
+    <head>
+        <meta charset="UTF-8">
+        <title>ALTO</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
+        <script src="https://cdn.tailwindcss.com"></script>
+
+    </head>
+
+    <body class="bg-red-500">
+        <header class="bg-indigo-500 text-slate-200 ">
+            <a class="flex justify-center" href="{% url 'main:index' %}">ATLO</a>
+        </header>
+        <hr>
+        {% block content %}{% endblock %}
+        <hr>
+        <footer>
+            <p class="flex justify-center">2022</p>
+        </footer>
+    </body>
+
+</html>

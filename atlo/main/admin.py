@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import User, Trafic
+from .models import Traffic, Results
 
-admin.site.register(User)
-admin.site.register(Trafic)
+admin.site.register(Traffic)
+
+admin.site.register(Results)
