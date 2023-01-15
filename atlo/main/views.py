@@ -1,6 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db import transaction
@@ -10,7 +8,6 @@ from .models import Traffic, Results
 from . import logic
 
 
-# @transaction.atomic
 def index(request):
     user = request.user
     try:
@@ -53,11 +50,13 @@ def index(request):
                 traffic.save()
     time_l_r, time_t_b = logic.timing_traffic_lights(traffic)
 
-    results = Results()
-    results.user = user
-    results.time_lf_rt = time_l_r
-    results.time_tp_bm = time_t_b
-    results.save()
+    results, created = Results.objects.update_or_create(
+        traffic=traffic,
+        defaults={
+            "time_lf_rt": time_l_r,
+            "time_tp_bm": time_t_b,
+        },
+    )
 
     context = {
         "form_traffic": traffic,
