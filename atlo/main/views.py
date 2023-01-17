@@ -10,11 +10,9 @@ from . import logic
 
 def index(request):
     user = request.user
-    try:
-        traffic = Traffic.objects.get(pk=user.pk)
-    except Traffic.DoesNotExist:
-        traffic = None
-    # traffic = Traffic.objects.get(pk=user.pk)
+
+    traffic = Traffic.objects.filter(user=user).first()
+    traffics = Traffic.objects.filter(user=user).all()
 
     new_traffic = {
         "from_left": request.POST.get("from_left"),
@@ -59,7 +57,8 @@ def index(request):
     )
 
     context = {
-        "form_traffic": traffic,
+        "traffic": traffic,
+        "traffics": traffics,
         "time_lf_rt": time_l_r,
         "time_tp_bm": time_t_b,
     }
@@ -108,3 +107,30 @@ def loginPage(request):
 def logoutUser(request):
     logout(request)
     return redirect("main:login")
+
+
+def addNewTraffic(request):
+    user = request.user
+    form_traffic = TrafficForm()
+    if request.method == "POST":
+        form_traffic = TrafficForm(request.POST)
+        if form_traffic.is_valid():
+
+            traffic = form_traffic.save(commit=False)
+            traffic.user_id = user.id
+            traffic.save()
+            return redirect("main:index")
+        else:
+            messages.info(request, "Username, email or password is wrong")
+
+    context = {"form_traffic": form_traffic}
+    return render(request, "main/new_traffic.html", context)
+
+
+def deleteTraffic(request, pk):
+    traffic = Traffic.objects.get(id=pk)
+    if request.method == "POST":
+        traffic.delete()
+        return redirect("main:index")
+    context = {"item": traffic}
+    return render(request, "main/delete_traffic.html", context)

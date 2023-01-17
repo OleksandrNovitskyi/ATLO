@@ -25,7 +25,6 @@ class Traffic(models.Model):
 class Results(models.Model):
     """Results of calculations - is time of green light in bouth direction for user"""
 
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
     traffic = models.OneToOneField(Traffic, on_delete=models.CASCADE)
     time_lf_rt = models.IntegerField()  # Time of green light in left-right direction
     time_tp_bm = models.IntegerField()  # Time of green light in top-bottom direction
