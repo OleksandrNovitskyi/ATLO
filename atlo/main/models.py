@@ -22,6 +22,18 @@ class Traffic(models.Model):
         verbose_name_plural = "Traffic sizes"
 
 
+class Speed(models.Model):
+    """Speed of cars.
+    Added and changed in the main screen
+    """
+
+    traffic = models.OneToOneField(Traffic, on_delete=models.CASCADE)
+    speed = models.IntegerField()  # speed cars in all direction
+
+    def __str__(self):
+        return f"Speed : {self.speed} km/h"
+
+
 class Results(models.Model):
     """Results of calculations - is time of green light in bouth direction for user"""
 
