@@ -10,7 +10,8 @@
         <div>
             <p class="m-2 text-white decoration-solid text-xl">Hello
                 {{ user.username }}</p>
-            <p class="m-2 text-white text-l">Curent experiment ID is {{ traffic.id }}</p>
+            <p class="m-2 text-white text-l">Curent experiment ID is
+                {{ traffic.id }}</p>
             <p>
                 <a href="{% url 'main:login'%}" class="m-2 text-indigo-600">Logout</a>
             </p>
@@ -67,8 +68,8 @@
             </table>
             <div class="flex">
                 <a
-                href="{% url 'main:add_new_traffic' %}"
-                class="w-full px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add new experiment</a>
+                    href="{% url 'main:add_new_traffic' %}"
+                    class="w-full px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add new experiment</a>
 
             </div>
         </div>
@@ -121,20 +122,23 @@
         <div>
             <p class="m-2 text-white text-xl">Other parameters</p>
             <div>
-                <input class="m-2" type="checkbox" name="use_speed">
+                <input
+                    class="m-2"
+                    type="checkbox"
+                    name="use_speed"
+                    {% if %}
+                    checked="checked"
+                    {%endif%}>
                 <label class="m-2 text-white text-l" for="speed">Speed</label>
                 <input
-                type="text"
-                formmethod="post"
-                name="speed"
-                inputmode="numeric"
-                required="required"
-                size="15"
-                value="{{ speed.speed }}" />
+                    type="text"
+                    formmethod="post"
+                    name="speed"
+                    inputmode="numeric"
+                    required="required"
+                    size="15"
+                    value="{{ speed.speed }}"/>
             </div>
-            
-
-
 
         </div>
         <div class="bg-slate-400 flex items-center justify-center">
