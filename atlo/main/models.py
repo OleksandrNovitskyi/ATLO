@@ -44,3 +44,13 @@ class Results(models.Model):
 
     def __str__(self):
         return f"Green time from left to right : {self.time_lf_rt}, Green time from top to bottom : {self.time_tp_bm}"
+
+
+class Profile(models.Model):
+    """User's picture"""
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(default="default-user-icon-21.jpg", null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} Profile"

@@ -80,12 +80,15 @@ def activate_traffic(request, pk):
 
     speed = Speed()
     speed_form = SpeedForm(request.POST or None)
+    checkbox_chacked = False
     if request.method == "POST":
         if speed_form.is_valid():
             if "use_speed" in request.POST:
-                speed.speed = request.POST["speed"]
-                print(speed)
-                speed.save()
+                checkbox_chacked = True
+                speed, created_speed = Speed.objects.update_or_create(
+                    traffic=traffic,
+                    defaults={"speed": request.POST["speed"]},
+                )
 
     time_l_r, time_t_b = logic.timing_traffic_lights(traffic)
 
@@ -96,8 +99,10 @@ def activate_traffic(request, pk):
             "time_tp_bm": time_t_b,
         },
     )
-
+    print("-------------speeed---------", speed.traffic_id)
+    print("traf", traffic.id)
     context = {
+        "checkbox_chacked": checkbox_chacked,
         "speed": speed,
         "traffic": traffic,
         "traffics": traffics,

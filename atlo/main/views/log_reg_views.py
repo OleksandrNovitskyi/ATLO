@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db import transaction
 
-from ..forms import CreateUserForm, TrafficForm
+from ..forms import CreateUserForm, TrafficForm, ImageForm
 
 
 @transaction.atomic  # if something wrong - nofing save to DB
