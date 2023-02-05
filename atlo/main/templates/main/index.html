@@ -1,5 +1,5 @@
 {% extends 'main/main.html' %}
-{% load static %}
+
 {% block content %}
 
     <form
@@ -8,11 +8,8 @@
         action="">
         {% csrf_token %}
         <div>
-            <p class="m-2 inline-block text-white decoration-solid text-xl">Hello
+            <p class="m-2 text-white decoration-solid text-xl">Hello
                 {{ user.username }}</p>
-                    <a href=""><img class="w-10 inline-block h-10 rounded text-white text-sm" src="{{ user.profile.image.url }}" alt="avatar" }}></a>
-            <p class="m-2 text-white text-l">Curent experiment ID is
-                {{ traffic.id }}</p>
             <p>
                 <a href="{% url 'main:login'%}" class="m-2 text-indigo-600">Logout</a>
             </p>
@@ -26,55 +23,10 @@
                     inputmode="numeric"
                     required="required"
                     size="15"
-                    value="{{ traffic.from_top }}">
+                    value="{{ form_traffic.from_top }}">
             </p>
         </div>
-
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead
-                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th>Action</th>
-                        <th>ID</th>
-                        <th>From left</th>
-                        <th>From top</th>
-                        <th>From right</th>
-                        <th>From bottom</th>
-                        <th>Del</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for i in traffics %}
-                        <tr
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="px-2 py-2">
-                                <a
-                                    class="bg-sky-500 text-white active:bg-sky-600 text-xs px-1 py-1 rounded-full shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
-                                    href="{% url 'main:activate_traffic' i.id %}">Activate</a>
-                            </td>
-                            <td class="px-2 py-2">{{ i.id }}</td>
-                            <td class="px-2 py-2">{{ i.from_left }}</td>
-                            <td class="px-2 py-2">{{ i.from_top }}</td>
-                            <td class="px-2 py-2">{{ i.from_right }}</td>
-                            <td class="px-2 py-2">{{ i.from_bottom }}</td>
-                            <td class="px-2 py-2">
-                                <a
-                                    class="bg-red-500 text-white active:bg-red-600 text-xs px-2 py-1 rounded-full shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
-                                    href="{% url 'main:delete_traffic' i.id %}">X</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div class="flex">
-                <a
-                    href="{% url 'main:add_new_traffic' %}"
-                    class="w-full px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add new experiment</a>
-
-            </div>
-        </div>
-
+        <div></div>
         <div class="bg-slate-400 flex items-center justify-center">
             <p>
                 <b>Number of traffic</b><br>
@@ -84,7 +36,7 @@
                     inputmode="numeric"
                     required="required"
                     size="15"
-                    value="{{ traffic.from_left }}"/>
+                    value="{{ form_traffic.from_left }}"/>
             </p>
         </div>
         <div class="bg-slate-400 flex items-center justify-center grid grid-cols-2">
@@ -117,32 +69,10 @@
                     inputmode="numeric"
                     required="required"
                     size="15"
-                    value="{{ traffic.from_right }}">
+                    value="{{ form_traffic.from_right }}">
             </p>
         </div>
-        <div>
-            <p class="m-2 text-white text-xl">Other parameters</p>
-            <div>
-                <input
-                    class="m-2"
-                    type="checkbox"
-                    name="use_speed"
-                    {% if checkbox_chacked %}
-                    checked
-                    {% endif %}
-                    />
-                <label class="m-2 text-white text-l" for="speed">Speed</label>
-                <input
-                    type="text"
-                    formmethod="post"
-                    name="speed"
-                    inputmode="numeric"
-                    required="required"
-                    size="15"
-                    value="{{ speed.speed }}"/>
-            </div>
-
-        </div>
+        <div></div>
         <div class="bg-slate-400 flex items-center justify-center">
             <p>
                 <b>Number of traffic</b><br>
@@ -152,12 +82,12 @@
                     inputmode="numeric"
                     required="required"
                     size="15"
-                    value="{{ traffic.from_bottom }}">
+                    value="{{ form_traffic.from_bottom }}">
             </p>
         </div>
         <div>
             <input
-                class="w-full px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 type="submit"
                 value='Calculate'
                 name='calculate'/>
