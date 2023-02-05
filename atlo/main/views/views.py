@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 
-from ..forms import TrafficForm, SpeedForm
-from ..models import Traffic, Results, Speed
+from ..forms import TrafficForm, SpeedForm, ImageForm, CreateUserForm
+from ..models import Traffic, Results, Speed, Profile
 from .. import logic
 
 
@@ -29,6 +29,36 @@ def addNewTraffic(request):
 
     context = {"form_traffic": form_traffic}
     return render(request, "main/new_traffic.html", context)
+
+
+def editAccount(request, pk):
+
+    # traffic = Traffic.objects.get(id=pk)
+    user = request.user
+    profile = Profile.objects.get(id=pk)
+
+    new_image = {"image": request.POST.get("image")}
+
+    empty_new_image = new_image["image"] is None
+
+    if not empty_new_image:
+        same_value = profile.image == new_image["image"]
+    else:
+        same_value = False
+
+    if not same_value:
+        if request.method == "POST":
+            image_form = ImageForm(request.POST)
+            form = CreateUserForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                if image_form.is_valid():
+                    profile.image == new_image["image"]
+                    profile.save()
+                    return redirect("main:index")
+
+    context = {"image_form": image_form, "form": form}
+    return render(request, "main/account.html", context)
 
 
 def deleteTraffic(request, pk):
@@ -99,8 +129,7 @@ def activate_traffic(request, pk):
             "time_tp_bm": time_t_b,
         },
     )
-    print("-------------speeed---------", speed.traffic_id)
-    print("traf", traffic.id)
+
     context = {
         "checkbox_chacked": checkbox_chacked,
         "speed": speed,

@@ -10,7 +10,7 @@
         <div>
             <p class="m-2 inline-block text-white decoration-solid text-xl">Hello
                 {{ user.username }}</p>
-                    <a href=""><img class="w-10 inline-block h-10 rounded text-white text-sm" src="{{ user.profile.image.url }}" alt="avatar" }}></a>
+                    <a href="{% url 'main:account_page' user.id %}"><img class="w-10 inline-block h-10 rounded text-white text-sm" src="{{ user.profile.image.url }}" alt="avatar" }}></a>
             <p class="m-2 text-white text-l">Curent experiment ID is
                 {{ traffic.id }}</p>
             <p>

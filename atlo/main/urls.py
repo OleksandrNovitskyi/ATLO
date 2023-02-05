@@ -9,6 +9,7 @@ urlpatterns = [
     path("login/", views.loginPage, name="login"),
     path("logout/", views.logoutUser, name="logout"),
     path("new_traffic/", views.addNewTraffic, name="add_new_traffic"),
+    path("account_page/<str:pk>", views.editAccount, name="account_page"),
     path("delete_traffic/<str:pk>", views.deleteTraffic, name="delete_traffic"),
     path("activate_traffic/<str:pk>", views.activate_traffic, name="activate_traffic"),
 ]
