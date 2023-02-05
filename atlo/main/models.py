@@ -22,13 +22,35 @@ class Traffic(models.Model):
         verbose_name_plural = "Traffic sizes"
 
 
+class Speed(models.Model):
+    """Speed of cars.
+    Added and changed in the main screen
+    """
+
+    traffic = models.OneToOneField(Traffic, on_delete=models.CASCADE)
+    speed = models.IntegerField()  # speed cars in all direction
+
+    def __str__(self):
+        return f"Speed : {self.speed} km/h"
+
+
 class Results(models.Model):
     """Results of calculations - is time of green light in bouth direction for user"""
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    traffic = models.OneToOneField(Traffic, on_delete=models.CASCADE)
     time_lf_rt = models.IntegerField()  # Time of green light in left-right direction
     time_tp_bm = models.IntegerField()  # Time of green light in top-bottom direction
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Green time from left to right : {self.time_lf_rt}, Green time from top to bottom : {self.time_tp_bm}"
+
+
+class Profile(models.Model):
+    """User's picture"""
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(default="default-user-icon-21.jpg", null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} Profile"
