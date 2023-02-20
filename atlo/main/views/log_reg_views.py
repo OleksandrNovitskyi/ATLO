@@ -3,7 +3,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db import transaction
 
-from ..forms import CreateUserForm, TrafficForm
+from ..forms import CreateUserForm, TrafficForm, ImageForm
+from ..models import Profile
 
 
 @transaction.atomic  # if something wrong - nofing save to DB
@@ -15,6 +16,8 @@ def registerPage(request):
         form_traffic = TrafficForm(request.POST)
         if form.is_valid():
             user = form.save()
+            profile = Profile(user=user, image="default-user-icon-21.jpg")
+            profile.save()
             if form_traffic.is_valid():
                 traffic = form_traffic.save(commit=False)
                 traffic.user_id = user.id

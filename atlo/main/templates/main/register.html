@@ -14,65 +14,57 @@
                     <form class="space-y-2 md:space-y-4" method="POST" action="">
                         {% csrf_token %}
                         <div class="columns-2">
-                        <div>
-                            <label
-                                for="username"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your name</label>
-                            {{ form.username }}
-                        </div>
-                        <div>
-                            <label
-                                for="email"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                            {{ form.email }}
-                        </div>
-                        <div>
-                            <label
-                                for="password"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                            {{ form.password1 }}
-                        </div>
-                        <div class="break-after-column">
-                            <label
-                                for="confirm-password"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
-                            {{ form.password2 }}
-                        </div>
-                        <!-- <div class="flex justify-center break-after-column">
-                            <div class="mb-3 w-96">
-                                <label for="formFile" class="form-label inline-block mb-2 text-gray-700">Your avatar</label>
-                              {{ image_form.image }}
+                            <div>
+                                <label
+                                    for="username"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your name</label>
+                                {{ form.username }}
                             </div>
-                          </div> -->
+                            <div>
+                                <label
+                                    for="email"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                                {{ form.email }}
+                            </div>
+                            <div>
+                                <label
+                                    for="password"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                                {{ form.password1 }}
+                            </div>
+                            <div class="break-after-column">
+                                <label
+                                    for="confirm-password"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
+                                {{ form.password2 }}
+                            </div>
+                            <p>Traffic parameters</p>
 
-
-                        <p>Traffic parameters</p>
-
-                        <div>
-                            <label
-                                for="from_top"
-                                class=" w-1/2 mb-1 text-sm font-medium text-gray-900 dark:text-white">From top</label>
-                            {{ form_traffic.from_top }}
+                            <div>
+                                <label
+                                    for="from_top"
+                                    class=" w-1/2 mb-1 text-sm font-medium text-gray-900 dark:text-white">From top</label>
+                                {{ form_traffic.from_top }}
+                            </div>
+                            <div>
+                                <label
+                                    for="from_right"
+                                    class=" mb-1 text-sm font-medium text-gray-900 dark:text-white">From right</label>
+                                {{ form_traffic.from_right }}
+                            </div>
+                            <div>
+                                <label
+                                    for="from_bottom"
+                                    class=" mb-1 text-sm font-medium text-gray-900 dark:text-white">From bottom</label>
+                                {{ form_traffic.from_bottom }}
+                            </div>
+                            <div>
+                                <label
+                                    for="from_left"
+                                    class=" mb-1 text-sm font-medium text-gray-900 dark:text-white">From left</label>
+                                {{ form_traffic.from_left }}
+                            </div>
                         </div>
-                        <div>
-                            <label
-                                for="from_right"
-                                class=" mb-1 text-sm font-medium text-gray-900 dark:text-white">From right</label>
-                            {{ form_traffic.from_right }}
-                        </div>
-                        <div>
-                            <label
-                                for="from_bottom"
-                                class=" mb-1 text-sm font-medium text-gray-900 dark:text-white">From bottom</label>
-                            {{ form_traffic.from_bottom }}
-                        </div>
-                        <div>
-                            <label
-                                for="from_left"
-                                class=" mb-1 text-sm font-medium text-gray-900 dark:text-white">From left</label>
-                            {{ form_traffic.from_left }}
-                        </div>
-                    </div>
                         <p class="bg-green-300"></p>{{ form.errors }}</p>
                     <button
                         type="submit"

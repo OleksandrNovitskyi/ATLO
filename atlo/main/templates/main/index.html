@@ -10,9 +10,12 @@
         <div>
             <p class="m-2 inline-block text-white decoration-solid text-xl">Hello
                 {{ user.username }}</p>
-                    <a href="{% url 'main:account_page' user.id %}"><img class="w-10 inline-block h-10 rounded text-white text-sm" src="{{ user.profile.image.url }}" alt="avatar" }}></a>
-            <p class="m-2 text-white text-l">Curent experiment ID is
-                {{ traffic.id }}</p>
+            <a href="{% url 'main:account_page' user.id %}"><img
+                class="w-10 inline-block h-10 rounded text-white text-sm"
+                src="{{ user.profile.image.url }}"
+                alt="avatar"
+                }}="}}"></a>
+            <p class="m-2 text-white text-l">Curent experiment ID is{{ traffic.id }}</p>
             <p>
                 <a href="{% url 'main:login'%}" class="m-2 text-indigo-600">Logout</a>
             </p>
@@ -128,9 +131,8 @@
                     type="checkbox"
                     name="use_speed"
                     {% if checkbox_chacked %}
-                    checked
-                    {% endif %}
-                    />
+                    checked="checked"
+                    {% endif %}/>
                 <label class="m-2 text-white text-l" for="speed">Speed</label>
                 <input
                     type="text"

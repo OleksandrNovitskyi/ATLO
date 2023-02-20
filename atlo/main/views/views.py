@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
+from django.db import transaction
 
 from ..forms import TrafficForm, SpeedForm, ImageForm, CreateUserForm
 from ..models import Traffic, Results, Speed, Profile
@@ -8,8 +9,11 @@ from .. import logic
 
 
 def index(request):
-    user = request.user
-    traffic = Traffic.objects.filter(user=user).last()
+    try:
+        user = request.user
+        traffic = Traffic.objects.filter(user=user).last()
+    except TypeError:
+        return redirect("main:login")
     return redirect(reverse("main:activate_traffic", args=[traffic.pk]))
 
 
@@ -19,7 +23,6 @@ def addNewTraffic(request):
     if request.method == "POST":
         form_traffic = TrafficForm(request.POST)
         if form_traffic.is_valid():
-
             traffic = form_traffic.save(commit=False)
             traffic.user_id = user.id
             traffic.save()
@@ -31,33 +34,30 @@ def addNewTraffic(request):
     return render(request, "main/new_traffic.html", context)
 
 
+@transaction.atomic
 def editAccount(request, pk):
-
-    # traffic = Traffic.objects.get(id=pk)
     user = request.user
-    profile = Profile.objects.get(id=pk)
+    profile = Profile.objects.get(user_id=pk)
 
     new_image = {"image": request.POST.get("image")}
-
-    empty_new_image = new_image["image"] is None
-
-    if not empty_new_image:
-        same_value = profile.image == new_image["image"]
-    else:
-        same_value = False
-
+    new_user_data = {
+        "username": request.POST.get("username"),
+        "email": request.POST.get("email"),
+    }
+    same_value = (
+        (profile.image == new_image["image"])
+        and (user.username == new_user_data["username"])
+        and (user.email == new_user_data["email"])
+    )
+    form = CreateUserForm()
+    image_form = ImageForm(instance=profile)
     if not same_value:
         if request.method == "POST":
-            image_form = ImageForm(request.POST)
-            form = CreateUserForm(request.POST)
-            if form.is_valid():
-                user = form.save()
-                if image_form.is_valid():
-                    profile.image == new_image["image"]
-                    profile.save()
-                    return redirect("main:index")
-
-    context = {"image_form": image_form, "form": form}
+            image_form = ImageForm(request.POST, request.FILES, instance=profile)
+            if image_form.is_valid():
+                profile.save()
+                return redirect("main:index")
+    context = {"image_form": image_form}
     return render(request, "main/account.html", context)
 
 

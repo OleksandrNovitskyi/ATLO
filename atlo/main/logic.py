@@ -4,7 +4,6 @@ def timing_traffic_lights(traffic):
 
     return green time at line left-righr, green time at line top-bottom
     """
-    print(type(traffic))
     max_cycle_time = 120
     sum_traf_l_r = traffic.from_left + traffic.from_right
     sum_traf_t_b = traffic.from_top + traffic.from_bottom
