@@ -3,8 +3,8 @@ from django.contrib import messages
 from django.urls import reverse
 from django.db import transaction
 
-from ..forms import TrafficForm, SpeedForm, ImageForm, CreateUserForm
-from ..models import Traffic, Results, Speed, Profile
+from ..forms import TrafficForm, OtherParamForm, ImageForm, CreateUserForm
+from ..models import Traffic, Results, OtherParam, Profile
 from .. import logic
 
 
@@ -108,34 +108,78 @@ def activate_traffic(request, pk):
             if form_traffic.is_valid():
                 traffic.save()
 
-    speed = Speed()
-    speed_form = SpeedForm(request.POST or None)
-    checkbox_chacked = False
+    other_param = OtherParam()
+    other_param_form = OtherParamForm(request.POST or None)
+    speed_checkbox_chacked = False
+    iterations_checkbox_chacked = False
+
     if request.method == "POST":
-        if speed_form.is_valid():
-            if "use_speed" in request.POST:
-                checkbox_chacked = True
-                speed, created_speed = Speed.objects.update_or_create(
+        if other_param_form.is_valid():
+            if "use_speed" in request.POST and "use_iterations" in request.POST:
+                speed_checkbox_chacked = True
+                iterations_checkbox_chacked = True
+
+                other_param, created_other_param = OtherParam.objects.update_or_create(
                     traffic=traffic,
-                    defaults={"speed": request.POST["speed"]},
+                    defaults={
+                        "speed": request.POST["speed"],
+                        "iterations": request.POST["iterations"],
+                    },
+                )
+            elif "use_speed" in request.POST:
+                speed_checkbox_chacked = True
+                other_param, created_other_param = OtherParam.objects.update_or_create(
+                    traffic=traffic,
+                    defaults={
+                        "speed": request.POST["speed"],
+                        "iterations": other_param.iterations,
+                    },
+                )
+            elif "use_iterations" in request.POST:
+                iterations_checkbox_chacked = True
+                other_param, created_other_param = OtherParam.objects.update_or_create(
+                    traffic=traffic,
+                    defaults={
+                        "iterations": request.POST["iterations"],
+                        "speed": other_param.speed,
+                    },
+                )
+            else:
+                other_param, created_other_param = OtherParam.objects.update_or_create(
+                    traffic=traffic,
+                    defaults={
+                        "speed": other_param.speed,
+                        "iterations": other_param.iterations,
+                    },
                 )
 
-    time_l_r, time_t_b = logic.timing_traffic_lights(traffic)
+    time_l_r, time_t_b = logic.get_green_signals_time(traffic)
+
+    collapses = logic.get_collapses(traffic, other_param)
 
     results, created = Results.objects.update_or_create(
         traffic=traffic,
         defaults={
             "time_lf_rt": time_l_r,
             "time_tp_bm": time_t_b,
+            "top_collapse": collapses["top collapse"],
+            "bottom_collapse": collapses["bottom collapse"],
+            "left_collapse": collapses["left collapse"],
+            "right_collapse": collapses["right collapse"],
         },
     )
 
     context = {
-        "checkbox_chacked": checkbox_chacked,
-        "speed": speed,
+        "speed_checkbox_chacked": speed_checkbox_chacked,
+        "iterations_checkbox_chacked": iterations_checkbox_chacked,
+        "other_param": other_param,
         "traffic": traffic,
         "traffics": traffics,
         "time_lf_rt": time_l_r,
         "time_tp_bm": time_t_b,
+        "top_collapse": collapses["top collapse"],
+        "bottom_collapse": collapses["bottom collapse"],
+        "left_collapse": collapses["left collapse"],
+        "right_collapse": collapses["right collapse"],
     }
     return render(request, "main/index.html", context)

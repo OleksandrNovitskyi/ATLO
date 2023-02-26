@@ -20,7 +20,14 @@
                 <a href="{% url 'main:login'%}" class="m-2 text-indigo-600">Logout</a>
             </p>
         </div>
-        <div class="bg-slate-400 flex items-center justify-center">
+        <div class="relative bg-slate-400 flex items-center justify-center">
+            {% if top_collapse %}
+            <div
+                class="absolute top-0 mb-4 rounded-lg bg-danger-100 py-5 px-6 text-base text-danger-700"
+                role="alert">
+                There were {{ top_collapse }} collapses in {{ other_param.iterations }} iterations
+            </div>
+            {% endif %}
             <p>
                 <b>Number of traffic</b><br>
                 <input
@@ -78,7 +85,14 @@
             </div>
         </div>
 
-        <div class="bg-slate-400 flex items-center justify-center">
+        <div class="relative bg-slate-400 flex items-center justify-center">
+            {% if left_collapse %}
+            <div
+                class="absolute top-0 mb-4 rounded-lg bg-danger-100 py-5 px-6 text-base text-danger-700"
+                role="alert">
+                There were {{ left_collapse }} collapses in {{ other_param.iterations }} iterations
+            </div>
+            {% endif %}
             <p>
                 <b>Number of traffic</b><br>
                 <input
@@ -92,25 +106,56 @@
         </div>
         <div class="bg-slate-400 flex items-center justify-center grid grid-cols-2">
             <div
-                class="text-xl m-auto font-bold text-green-700 rounded-full bg-slate-400 flex items-center justify-center border-8 border-green-700 h-20 w-20">
+                class="text-xl m-auto font-bold rounded-full bg-slate-400 flex items-center justify-center h-20 w-20
+                {% if time_tp_bm > time_lf_rt %}
+                text-green-700 border-8 border-green-700
+                {% else %}
+                text-red-700 border-8 border-red-700
+                {% endif %}
+                ">
                 &#129091;
                 {{ time_tp_bm }}
             </div>
             <div
-                class="text-xl m-auto font-bold text-red-700 rounded-full bg-slate-400 flex items-center justify-center border-8 border-red-700 h-20 w-20">
+                class="text-xl m-auto font-bold rounded-full bg-slate-400 flex items-center justify-center h-20 w-20
+                {% if time_tp_bm < time_lf_rt %}
+                text-green-700 border-8 border-green-700
+                {% else %}
+                text-red-700 border-8 border-red-700
+                {% endif %}
+                ">
                 &#129088;
                 {{ time_lf_rt }}
             </div>
             <div
-                class="text-xl m-auto font-bold text-red-700 rounded-full bg-slate-400 flex items-center justify-center border-8 border-red-700 h-20 w-20">
+                class="text-xl m-auto font-bold rounded-full bg-slate-400 flex items-center justify-center h-20 w-20
+                {% if time_tp_bm < time_lf_rt %}
+                text-green-700 border-8 border-green-700
+                {% else %}
+                text-red-700 border-8 border-red-700
+                {% endif %}
+                ">
                 &#129090;
                 {{ time_lf_rt }}</div>
             <div
-                class="text-xl m-auto font-bold text-green-700 rounded-full bg-slate-400 flex items-center justify-center border-8 border-green-700 h-20 w-20">
+                class="text-xl m-auto font-bold rounded-full bg-slate-400 flex items-center justify-center h-20 w-20
+                {% if time_tp_bm > time_lf_rt %}
+                text-green-700 border-8 border-green-700
+                {% else %}
+                text-red-700 border-8 border-red-700
+                {% endif %}
+                ">
                 &#129089;
                 {{ time_tp_bm }}</div>
         </div>
-        <div class="bg-slate-400 flex items-center justify-center">
+        <div class="relative bg-slate-400 flex items-center justify-center">
+            {% if right_collapse %}
+            <div
+                class="absolute top-0 mb-4 rounded-lg bg-danger-100 py-5 px-6 text-base text-danger-700"
+                role="alert">
+                There were {{ right_collapse }} collapses in {{ other_param.iterations }} iterations
+            </div>
+            {% endif %}
             <p>
                 <b>Number of traffic</b><br>
                 <input
@@ -130,7 +175,7 @@
                     class="m-2"
                     type="checkbox"
                     name="use_speed"
-                    {% if checkbox_chacked %}
+                    {% if speed_checkbox_chacked %}
                     checked="checked"
                     {% endif %}/>
                 <label class="m-2 text-white text-l" for="speed">Speed</label>
@@ -141,11 +186,36 @@
                     inputmode="numeric"
                     required="required"
                     size="15"
-                    value="{{ speed.speed }}"/>
+                    value="{{ other_param.speed }}"/>
+            </div>
+            <div>
+                <input
+                    class="m-2"
+                    type="checkbox"
+                    name="use_iterations"
+                    {% if iterations_checkbox_chacked %}
+                    checked="checked"
+                    {% endif %}/>
+                <label class="m-2 text-white text-l" for="iterations">Iterations</label>
+                <input
+                    type="text"
+                    formmethod="post"
+                    name="iterations"
+                    inputmode="numeric"
+                    required="required"
+                    size="15"
+                    value="{{ other_param.iterations }}"/>
             </div>
 
         </div>
-        <div class="bg-slate-400 flex items-center justify-center">
+        <div class="relative bg-slate-400 flex items-center justify-center">
+            {% if bottom_collapse %}
+            <div
+                class="absolute top-0 mb-4 rounded-lg bg-danger-100 py-5 px-6 text-base text-danger-700"
+                role="alert">
+                There were {{ bottom_collapse }} collapses in {{ other_param.iterations }} iterations
+            </div>
+            {% endif %}
             <p>
                 <b>Number of traffic</b><br>
                 <input
