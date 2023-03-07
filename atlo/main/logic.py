@@ -11,6 +11,7 @@ left_turn_percent = {
     "perc_top": 0.01,
     "perc_bottom": 0,
 }
+AVERAGE_CAR_LENGTH = 4.5
 
 
 class Car:
@@ -157,7 +158,9 @@ def get_cross_capacity(green_time):
     """Get number of cars wich can out of cross when they starts from congestion"""
     time_to_leave = math.sqrt(2 * S / acceleration)
     capacity = int(
-        (green_time - time_to_leave) / (math.sqrt(2 * 4.5 / acceleration) + 1) + 1
+        (green_time - time_to_leave)
+        / (math.sqrt(2 * AVERAGE_CAR_LENGTH / acceleration) + 1)
+        + 1
     )
     return capacity
 
@@ -177,7 +180,6 @@ def current_line(
 
     if curr_line > capacity + 5:
         new_cars.add_cars(curr_direction)
-        new_cars.sort()
         new_cars.remove_n_car(capacity)
         new_cars_wich_stay = new_cars
 
@@ -187,16 +189,20 @@ def current_line(
                 car.time + period_time_to_leave_cross > green_time - time_to_stop
             )
             if car.time < time_when_last_car_starts:
-                time_when_last_car_starts += math.sqrt(2 * 4.5 / acceleration)
+                time_when_last_car_starts += math.sqrt(
+                    2 * AVERAGE_CAR_LENGTH / acceleration
+                )
                 numb_cars += 1
                 period_time_to_leave_cross = math.sqrt(
-                    2 * (curr_line + numb_cars) * 4.5 / acceleration
+                    2 * (curr_line + numb_cars) * AVERAGE_CAR_LENGTH / acceleration
                     + 1 * (curr_line + numb_cars)
                 )
                 if stay_condition:
                     new_cars_wich_stay.add_car(car)
             elif car.time < (time_when_last_car_starts + period_time_to_leave_cross):
-                period_time_to_leave_cross += math.sqrt(2 * 4.5 / acceleration)
+                period_time_to_leave_cross += math.sqrt(
+                    2 * AVERAGE_CAR_LENGTH / acceleration
+                )
                 if stay_condition:
                     new_cars_wich_stay.add_car(car)
             else:
@@ -206,12 +212,44 @@ def current_line(
 
 
 def get_time_when_last_car_starts(curr_line_obj):
+    """Returns how long it takes for the current line to leave the cross"""
     curr_line = curr_line_obj.get_length()
+    result = 0
     if curr_line > 0:
-        result = (math.sqrt(2 * 4.5 / acceleration) + 1) * (curr_line - 1) + 1
-    else:
-        result = 0
+        result = (math.sqrt(2 * AVERAGE_CAR_LENGTH / acceleration) + 1) * (
+            curr_line - 1
+        ) + 1
+
     return result
+
+
+def get_first_iteration_current_lines(traffic, time_l_r, time_t_b):
+    """Return dictionary with four objects Direction of each side"""
+    curr_lines = {
+        "curr_left_line": Direction(0, 0),
+        "curr_right_line": Direction(0, 0),
+        "curr_top_line": Direction(0, 0),
+        "curr_bottom_line": Direction(0, 0),
+    }
+    if time_l_r > time_t_b:  # horizontal green
+        curr_lines["curr_top_line"] = Direction(
+            traffic.from_top * time_l_r // MAX_CYCLE_TIME,
+            left_turn_percent["perc_top"],
+        )
+        curr_lines["curr_bottom_line"] = Direction(
+            traffic.from_bottom * time_l_r // MAX_CYCLE_TIME,
+            left_turn_percent["perc_bottom"],
+        )
+    else:  # vertical green
+        curr_lines["curr_left_line"] = Direction(
+            traffic.from_left * time_t_b // MAX_CYCLE_TIME,
+            left_turn_percent["perc_left"],
+        )
+        curr_lines["curr_right_line"] = Direction(
+            traffic.from_right * time_t_b // MAX_CYCLE_TIME,
+            left_turn_percent["perc_right"],
+        )
+    return curr_lines
 
 
 def get_collapses(traffic, other_param):
@@ -226,80 +264,68 @@ def get_collapses(traffic, other_param):
     if other_param.speed:
         SPEED = int(other_param.speed)
     if other_param.iterations:
-        iter = int(other_param.iterations)
+        iteration = int(other_param.iterations)
     collapses = {
-        "top collapse": 0,
-        "bottom collapse": 0,
-        "left collapse": 0,
-        "right collapse": 0,
+        "top_collapse": 0,
+        "bottom_collapse": 0,
+        "left_collapse": 0,
+        "right_collapse": 0,
     }
     time_l_r, time_t_b = get_green_signals_time(traffic)
-    if time_l_r > time_t_b:  # horizontal green
-        curr_left_line = Direction(0, 0)
-        curr_right_line = Direction(0, 0)
-        curr_top_line = Direction(
-            traffic.from_top * time_l_r // MAX_CYCLE_TIME, left_turn_percent["perc_top"]
-        )
-        curr_bottom_line = Direction(
-            traffic.from_bottom * time_l_r // MAX_CYCLE_TIME,
-            left_turn_percent["perc_bottom"],
-        )
-    else:  # vertical green
-        curr_left_line = Direction(
-            traffic.from_left * time_t_b // MAX_CYCLE_TIME,
-            left_turn_percent["perc_left"],
-        )
-        curr_right_line = Direction(
-            traffic.from_right * time_t_b // MAX_CYCLE_TIME,
-            left_turn_percent["perc_right"],
-        )
-        curr_top_line = Direction(0, 0)
-        curr_bottom_line = Direction(0, 0)
+    curr_lines = get_first_iteration_current_lines(traffic, time_l_r, time_t_b)
 
-    for i in range(iter):
-        time_when_starts_last_left = get_time_when_last_car_starts(curr_left_line)
-        time_when_starts_last_right = get_time_when_last_car_starts(curr_right_line)
-        curr_left_line = current_line(
+    for i in range(iteration):
+        time_when_starts_last_left = get_time_when_last_car_starts(
+            curr_lines["curr_left_line"]
+        )
+        time_when_starts_last_right = get_time_when_last_car_starts(
+            curr_lines["curr_right_line"]
+        )
+        curr_lines["curr_left_line"] = current_line(
             traffic.from_left,
             left_turn_percent["perc_left"],
             time_l_r,
-            curr_left_line,
+            curr_lines["curr_left_line"],
             time_when_starts_last_left,
         )
-        curr_right_line = current_line(
+        curr_lines["curr_right_line"] = current_line(
             traffic.from_right,
             left_turn_percent["perc_right"],
             time_l_r,
-            curr_right_line,
+            curr_lines["curr_right_line"],
             time_when_starts_last_right,
         )
 
         if time_when_starts_last_left > time_l_r * 1.5:
-            collapses["left collapse"] += 1
+            collapses["left_collapse"] += 1
         if time_when_starts_last_right > time_l_r * 1.5:
-            collapses["right collapse"] += 1
+            collapses["right_collapse"] += 1
 
-        time_when_starts_last_top = get_time_when_last_car_starts(curr_top_line)
-        curr_top_line = current_line(
+        time_when_starts_last_top = get_time_when_last_car_starts(
+            curr_lines["curr_top_line"]
+        )
+        curr_lines["curr_top_line"] = current_line(
             traffic.from_top,
             left_turn_percent["perc_top"],
             time_t_b,
-            curr_top_line,
+            curr_lines["curr_top_line"],
             time_when_starts_last_top,
         )
         if time_when_starts_last_top > time_t_b * 1.5:
-            collapses["top collapse"] += 1
+            collapses["top_collapse"] += 1
 
-        time_when_starts_last_bottom = get_time_when_last_car_starts(curr_bottom_line)
-        curr_bottom_line = current_line(
+        time_when_starts_last_bottom = get_time_when_last_car_starts(
+            curr_lines["curr_bottom_line"]
+        )
+        curr_lines["curr_bottom_line"] = current_line(
             traffic.from_bottom,
             left_turn_percent["perc_bottom"],
             time_t_b,
-            curr_bottom_line,
+            curr_lines["curr_bottom_line"],
             time_when_starts_last_bottom,
         )
         if time_when_starts_last_bottom > time_t_b * 1.5:
-            collapses["bottom collapse"] += 1
+            collapses["bottom_collapse"] += 1
     return collapses
 
 

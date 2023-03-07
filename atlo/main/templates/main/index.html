@@ -21,11 +21,11 @@
             </p>
         </div>
         <div class="relative bg-slate-400 flex items-center justify-center">
-            {% if top_collapse %}
+            {% if collapses.top_collapse %}
             <div
                 class="absolute top-0 mb-4 rounded-lg bg-danger-100 py-5 px-6 text-base text-danger-700"
                 role="alert">
-                There were {{ top_collapse }} collapses in {{ other_param.iterations }} iterations
+                There were {{ collapses.top_collapse }} collapses in {{ other_param.iterations }} iterations
             </div>
             {% endif %}
             <p>
@@ -86,11 +86,11 @@
         </div>
 
         <div class="relative bg-slate-400 flex items-center justify-center">
-            {% if left_collapse %}
+            {% if collapses.left_collapse %}
             <div
                 class="absolute top-0 mb-4 rounded-lg bg-danger-100 py-5 px-6 text-base text-danger-700"
                 role="alert">
-                There were {{ left_collapse }} collapses in {{ other_param.iterations }} iterations
+                There were {{ collapses.left_collapse }} collapses in {{ other_param.iterations }} iterations
             </div>
             {% endif %}
             <p>
@@ -149,11 +149,11 @@
                 {{ time_tp_bm }}</div>
         </div>
         <div class="relative bg-slate-400 flex items-center justify-center">
-            {% if right_collapse %}
+            {% if collapses.right_collapse %}
             <div
                 class="absolute top-0 mb-4 rounded-lg bg-danger-100 py-5 px-6 text-base text-danger-700"
                 role="alert">
-                There were {{ right_collapse }} collapses in {{ other_param.iterations }} iterations
+                There were {{ collapses.right_collapse }} collapses in {{ other_param.iterations }} iterations
             </div>
             {% endif %}
             <p>
@@ -209,11 +209,11 @@
 
         </div>
         <div class="relative bg-slate-400 flex items-center justify-center">
-            {% if bottom_collapse %}
+            {% if collapses.bottom_collapse %}
             <div
                 class="absolute top-0 mb-4 rounded-lg bg-danger-100 py-5 px-6 text-base text-danger-700"
                 role="alert">
-                There were {{ bottom_collapse }} collapses in {{ other_param.iterations }} iterations
+                There were {{ collapses.bottom_collapse }} collapses in {{ other_param.iterations }} iterations
             </div>
             {% endif %}
             <p>

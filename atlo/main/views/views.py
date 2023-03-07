@@ -162,10 +162,10 @@ def activate_traffic(request, pk):
         defaults={
             "time_lf_rt": time_l_r,
             "time_tp_bm": time_t_b,
-            "top_collapse": collapses["top collapse"],
-            "bottom_collapse": collapses["bottom collapse"],
-            "left_collapse": collapses["left collapse"],
-            "right_collapse": collapses["right collapse"],
+            "top_collapse": collapses["top_collapse"],
+            "bottom_collapse": collapses["bottom_collapse"],
+            "left_collapse": collapses["left_collapse"],
+            "right_collapse": collapses["right_collapse"],
         },
     )
 
@@ -177,9 +177,6 @@ def activate_traffic(request, pk):
         "traffics": traffics,
         "time_lf_rt": time_l_r,
         "time_tp_bm": time_t_b,
-        "top_collapse": collapses["top collapse"],
-        "bottom_collapse": collapses["bottom collapse"],
-        "left_collapse": collapses["left collapse"],
-        "right_collapse": collapses["right collapse"],
+        "collapses": collapses,
     }
     return render(request, "main/index.html", context)

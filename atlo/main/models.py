@@ -24,17 +24,15 @@ class Traffic(models.Model):
 
 class OtherParam(models.Model):
     """Other parameters of calculations
-    1. Speed of cars.
-    2. how many cycles will the traffic light work
+    speed - Speed of cars.
+    iterations - how many cycles will the traffic light work
 
     Added and changed in the main screen
     """
 
     traffic = models.OneToOneField(Traffic, on_delete=models.CASCADE)
-    speed = models.IntegerField(default=60)  # speed cars in all direction
-    iterations = models.IntegerField(
-        default=15
-    )  # how many cycles will the traffic light work
+    speed = models.IntegerField(default=60)
+    iterations = models.IntegerField(default=15)
 
     def __str__(self):
         return f"Speed : {self.speed} km/h; Iterations : {self.iterations}"
@@ -43,11 +41,19 @@ class OtherParam(models.Model):
 class Results(models.Model):
     """Results of calculations - is time of green light in bouth direction for user
     and numbers of collapses in each directions
+
+    time_lf_rt - Time of green light in left-right direction
+    time_tp_bm - Time of green light in top-bottom direction
+    top_collapse - number when number of cars from top direction > 1.5 * the capacity of the cross
+    bottom_collapse - number when number of cars from bottom direction > 1.5 * the capacity of the cross
+    left_collapse - number when number of cars from left direction > 1.5 * the capacity of the cross
+    right_collapse - number when number of cars from right direction > 1.5 * the capacity of the cross
+    created - date of calculation
     """
 
     traffic = models.OneToOneField(Traffic, on_delete=models.CASCADE)
-    time_lf_rt = models.IntegerField()  # Time of green light in left-right direction
-    time_tp_bm = models.IntegerField()  # Time of green light in top-bottom direction
+    time_lf_rt = models.IntegerField()
+    time_tp_bm = models.IntegerField()
     top_collapse = models.IntegerField()
     bottom_collapse = models.IntegerField()
     left_collapse = models.IntegerField()
