@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 from django.db import transaction
+from django.contrib.auth.models import User
 
 from ..forms import TrafficForm, OtherParamForm, ImageForm, CreateUserForm
 from ..models import Traffic, Results, OtherParam, Profile
@@ -13,6 +14,12 @@ def index(request):
         user = request.user
         traffic = Traffic.objects.filter(user=user).last()
     except TypeError:
+        # user = User()
+        # user.username = "Anonimus"
+        # traffic = Traffic()
+        # traffic.user_id = user.id
+        # user.save()
+        # traffic.save()
         return redirect("main:login")
     return redirect(reverse("main:activate_traffic", args=[traffic.pk]))
 
@@ -118,40 +125,22 @@ def activate_traffic(request, pk):
             if "use_speed" in request.POST and "use_iterations" in request.POST:
                 speed_checkbox_chacked = True
                 iterations_checkbox_chacked = True
-
-                other_param, created_other_param = OtherParam.objects.update_or_create(
-                    traffic=traffic,
-                    defaults={
-                        "speed": request.POST["speed"],
-                        "iterations": request.POST["iterations"],
-                    },
-                )
             elif "use_speed" in request.POST:
                 speed_checkbox_chacked = True
-                other_param, created_other_param = OtherParam.objects.update_or_create(
-                    traffic=traffic,
-                    defaults={
-                        "speed": request.POST["speed"],
-                        "iterations": other_param.iterations,
-                    },
-                )
             elif "use_iterations" in request.POST:
                 iterations_checkbox_chacked = True
-                other_param, created_other_param = OtherParam.objects.update_or_create(
-                    traffic=traffic,
-                    defaults={
-                        "iterations": request.POST["iterations"],
-                        "speed": other_param.speed,
-                    },
-                )
-            else:
-                other_param, created_other_param = OtherParam.objects.update_or_create(
-                    traffic=traffic,
-                    defaults={
-                        "speed": other_param.speed,
-                        "iterations": other_param.iterations,
-                    },
-                )
+
+            other_param, created_other_param = OtherParam.objects.update_or_create(
+                traffic=traffic,
+                defaults={
+                    "speed": speed_checkbox_chacked
+                    and request.POST["speed"]
+                    or other_param.speed,
+                    "iterations": iterations_checkbox_chacked
+                    and request.POST["iterations"]
+                    or other_param.iterations,
+                },
+            )
 
     time_l_r, time_t_b = logic.get_green_signals_time(traffic)
 

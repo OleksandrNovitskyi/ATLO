@@ -9,10 +9,10 @@ class Traffic(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    from_left = models.IntegerField(default=0, null=True)
-    from_right = models.IntegerField(default=0, null=True)
-    from_top = models.IntegerField(default=0, null=True)
-    from_bottom = models.IntegerField(default=0, null=True)
+    from_left = models.IntegerField(default=1, null=True)
+    from_right = models.IntegerField(default=1, null=True)
+    from_top = models.IntegerField(default=1, null=True)
+    from_bottom = models.IntegerField(default=1, null=True)
 
     def __str__(self):
         return f"from left : {self.from_left}, from right : {self.from_right}, from top : {self.from_top}, from bottom : {self.from_bottom}"
