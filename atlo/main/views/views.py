@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 from django.db import transaction
-from django.contrib.auth.models import User
 
 from ..forms import TrafficForm, OtherParamForm, ImageForm, CreateUserForm
 from ..models import Traffic, Results, OtherParam, Profile
@@ -14,12 +13,6 @@ def index(request):
         user = request.user
         traffic = Traffic.objects.filter(user=user).last()
     except TypeError:
-        # user = User()
-        # user.username = "Anonimus"
-        # traffic = Traffic()
-        # traffic.user_id = user.id
-        # user.save()
-        # traffic.save()
         return redirect("main:login")
     return redirect(reverse("main:activate_traffic", args=[traffic.pk]))
 
@@ -35,7 +28,7 @@ def addNewTraffic(request):
             traffic.save()
             return redirect("main:index")
         else:
-            messages.info(request, "Username, email or password is wrong")
+            messages.info(request, "Username or password is wrong")
 
     context = {"form_traffic": form_traffic}
     return render(request, "main/new_traffic.html", context)

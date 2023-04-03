@@ -2,8 +2,6 @@ import random
 import math
 from . import logic_helper
 
-# import logic_helper  # not working ???
-
 MAX_CYCLE_TIME = 120
 S = 25  # length of cross
 acceleration = 1.5  # acceleration of the car
@@ -119,18 +117,6 @@ class Direction:
         """len() function"""
         return len(self.cars)
 
-    def find_first_turnd_left(self):
-        """Find first car in the Direction what will turn left"""
-        for car in self.cars:
-            if car.left_turn:
-                return car
-
-    def next(self, car_obj):
-        """Return next car of the direction"""
-        for car in self.cars:
-            if car.time > car_obj.time:
-                return car
-
     def get_time_when_last_car_starts(self):
         """Returns how long it takes for the current line to leave the cross"""
         curr_line = self.length()
@@ -139,56 +125,42 @@ class Direction:
             result = (math.sqrt(2 * AVERAGE_CAR_LENGTH / acceleration) + 1) * (
                 curr_line - 1
             ) + 1
-
         return result
 
     def get_new_line(
-        self, new_line, period_time_to_leave_cross, green_time, time_to_stop
+        self,
+        new_cars_wich_stay,
+        curr_line,
+        green_time,
+        time_to_stop,
+        time_when_last_car_starts,
     ):
         """refresh line after new wave
 
-        new_line : Line (result of calculation)
-        period_time_to_leave_cross : float
+        new_cars_wich_stay : Direction (result of calculation)
+        curr_line : integer
         green_time : integer
         time_to_stop : float
         """
-        time_when_last_car_starts = self.get_time_when_last_car_starts()
+        period_time_to_leave_cross = math.sqrt(
+            2 * curr_line * AVERAGE_CAR_LENGTH / acceleration + 1 * curr_line
+        )
+
         for car in self.cars:
-            stay_condition = (
-                car.time + period_time_to_leave_cross > green_time - time_to_stop
-            )
-            if car.time < time_when_last_car_starts:
+            if car.time < time_when_last_car_starts:  # car appears before clean line
                 time_when_last_car_starts += math.sqrt(
                     2 * AVERAGE_CAR_LENGTH / acceleration
                 )
                 period_time_to_leave_cross += math.sqrt(
                     2 * AVERAGE_CAR_LENGTH / acceleration + 1
                 )
-                if stay_condition:
-                    new_line.add_car(car)
             elif car.time < (time_when_last_car_starts + period_time_to_leave_cross):
                 period_time_to_leave_cross += math.sqrt(
                     2 * AVERAGE_CAR_LENGTH / acceleration
                 )
-                if stay_condition:
-                    new_line.add_car(car)
-            else:
-                if stay_condition:
-                    new_line.add_car(car)
 
-
-class Line(Direction):
-    """Represents a line of cars from some direction.
-
-    Attributes:
-      cars: list of Car objects.
-      cars_time_list: list of Car.time
-    """
-
-    def __init__(self):
-        """Initializes the Line with n cars."""
-        self.cars = []
-        self.cars_time_list = []
+            if car.time + period_time_to_leave_cross > green_time - time_to_stop:
+                new_cars_wich_stay.add_car(car)
 
 
 def get_green_signals_time(traff):
@@ -241,63 +213,26 @@ def current_line(
     time_when_last_car_starts,
     const,
 ):
-    """Get number of cars wich stop in line"""
+    """Get new line of cars wich stop in line"""
     new_cars = Direction(traff_from, left_turn_perc)
     capacity = get_cross_capacity(green_time)  # capacity of cross(number of cars)
     time_to_stop = get_time_to_stop(const.speed)
     curr_line = curr_direction.length()
-    period_time_to_leave_cross = math.sqrt(
-        2 * curr_line * AVERAGE_CAR_LENGTH / acceleration + 1 * curr_line
-    )
-
     new_cars_wich_stay = Direction(0, 0)
-    # new_cars_wich_stay = Line()
 
     if curr_line > capacity + 5:
         new_cars.add_cars(curr_direction)
         new_cars.remove_n_car(capacity)
         new_cars_wich_stay = new_cars
-        # new_cars_wich_stay.add_cars(new_cars)
-
     else:
         new_cars.get_new_line(
-            new_cars_wich_stay, period_time_to_leave_cross, green_time, time_to_stop
+            new_cars_wich_stay,
+            curr_line,
+            green_time,
+            time_to_stop,
+            time_when_last_car_starts,
         )
-        # for car in new_cars.cars:
-        #     stay_condition = (
-        #         car.time + period_time_to_leave_cross > green_time - time_to_stop
-        #     )
-        #     if car.time < time_when_last_car_starts:
-        #         time_when_last_car_starts += math.sqrt(
-        #             2 * AVERAGE_CAR_LENGTH / acceleration
-        #         )
-        #         period_time_to_leave_cross += math.sqrt(
-        #             2 * AVERAGE_CAR_LENGTH / acceleration + 1
-        #         )
-        #         if stay_condition:
-        #             new_cars_wich_stay.add_car(car)
-        #     elif car.time < (time_when_last_car_starts + period_time_to_leave_cross):
-        #         period_time_to_leave_cross += math.sqrt(
-        #             2 * AVERAGE_CAR_LENGTH / acceleration
-        #         )
-        #         if stay_condition:
-        #             new_cars_wich_stay.add_car(car)
-        #     else:
-        #         if stay_condition:
-        #             new_cars_wich_stay.add_car(car)
     return new_cars_wich_stay
-
-
-# def get_time_when_last_car_starts(curr_line_obj):
-#     """Returns how long it takes for the current line to leave the cross"""
-#     curr_line = curr_line_obj.length()
-#     result = 0
-#     if curr_line > 0:
-#         result = (math.sqrt(2 * AVERAGE_CAR_LENGTH / acceleration) + 1) * (
-#             curr_line - 1
-#         ) + 1
-
-#     return result
 
 
 def get_first_iteration_current_lines(traffic, time_l_r, time_t_b):
@@ -336,7 +271,6 @@ def get_collapses(traffic, other_param):
 
     return dictionary with number of vertical and horisontal collapses
     """
-    # global SPEED
     const = Constants()
 
     if other_param.speed:
@@ -409,19 +343,3 @@ def get_collapses(traffic, other_param):
         if time_when_starts_last_bottom > time_t_b * 1.5:
             collapses["bottom_collapse"] += 1
     return collapses
-
-
-if __name__ == "__main__":
-
-    direction = Direction(5, 0.03)
-    direction2 = Direction(4, 0.2)
-    print(direction)
-    print()
-    car = Car(24)
-    car2 = Car(24)
-    direction.add_car(car)
-
-    line = Line()
-    line.add_car(car)
-
-    print(line.cars)

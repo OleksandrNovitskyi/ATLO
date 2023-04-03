@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db import transaction
 
-from ..forms import CreateUserForm, TrafficForm, ImageForm
+from ..forms import CreateUserForm, TrafficForm
 from ..models import Profile
 
 
@@ -33,16 +33,15 @@ def loginPage(request):
 
     if request.method == "POST":
         username = request.POST.get("username")
-        email = request.POST.get("email")
         password = request.POST.get("password")
 
-        user = authenticate(request, username=username, email=email, password=password)
+        user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
             return redirect("main:index")
         else:
-            messages.info(request, "Username, email or password is wrong")
+            messages.info(request, "Username or password is wrong")
 
     context = {}
     return render(request, "main/login.html", context)
