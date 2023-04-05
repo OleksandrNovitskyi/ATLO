@@ -3,17 +3,36 @@ from django.contrib import messages
 from django.urls import reverse
 from django.db import transaction
 
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+
 from ..forms import TrafficForm, OtherParamForm, ImageForm, CreateUserForm
 from ..models import Traffic, Results, OtherParam, Profile
 from .. import logic
 
 
 def index(request):
-    try:
+
+    if request.user.id is not None:
         user = request.user
         traffic = Traffic.objects.filter(user=user).last()
-    except TypeError:
-        return redirect("main:login")
+    else:
+        user = User.objects.create_user(
+            id=1, username="Guest", email="guest@gmail.com", password="1111"
+        )
+        user.save()
+
+        traffic = Traffic(
+            user=user, from_top=1, from_bottom=1, from_left=1, from_right=1
+        )
+        traffic.save()
+
+        profile = Profile(user_id=user.id, image="default-user-icon-21.jpg")
+        profile.save()
+
+        login(request, user)
+        return redirect("main:index")
+
     return redirect(reverse("main:activate_traffic", args=[traffic.pk]))
 
 
