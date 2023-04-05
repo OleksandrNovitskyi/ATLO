@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.db import transaction
 
 from ..forms import CreateUserForm, TrafficForm
+from ..models import Profile
 
 
 @transaction.atomic  # if something wrong - nofing save to DB
@@ -15,6 +16,8 @@ def registerPage(request):
         form_traffic = TrafficForm(request.POST)
         if form.is_valid():
             user = form.save()
+            profile = Profile(user=user, image="default-user-icon-21.jpg")
+            profile.save()
             if form_traffic.is_valid():
                 traffic = form_traffic.save(commit=False)
                 traffic.user_id = user.id
@@ -30,16 +33,15 @@ def loginPage(request):
 
     if request.method == "POST":
         username = request.POST.get("username")
-        email = request.POST.get("email")
         password = request.POST.get("password")
 
-        user = authenticate(request, username=username, email=email, password=password)
+        user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
             return redirect("main:index")
         else:
-            messages.info(request, "Username, email or password is wrong")
+            messages.info(request, "Username or password is wrong")
 
     context = {}
     return render(request, "main/login.html", context)

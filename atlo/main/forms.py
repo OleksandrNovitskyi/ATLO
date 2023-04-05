@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 
-from .models import Traffic, Speed, Profile
+from .models import Traffic, OtherParam, Profile
 
 ATTRS_INPUT = {
     "class": "bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -33,13 +33,15 @@ class TrafficForm(ModelForm):
         fields = ["from_top", "from_bottom", "from_left", "from_right"]
 
 
-class SpeedForm(ModelForm):
+class OtherParamForm(ModelForm):
     use_speed = forms.BooleanField(required=False)
     speed = CharField(widget=TextInput(attrs=ATTRS_INPUT))
+    use_iterations = forms.BooleanField(required=False)
+    iterations = CharField(widget=TextInput(attrs=ATTRS_INPUT))
 
     class Meta:
-        model = Speed
-        fields = ["speed"]
+        model = OtherParam
+        fields = ["speed", "iterations"]
 
 
 class ImageForm(ModelForm):
