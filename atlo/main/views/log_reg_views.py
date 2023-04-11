@@ -13,19 +13,15 @@ def registerPage(request):
     form_traffic = TrafficForm()
     if request.method == "POST":
         form = CreateUserForm(request.POST)
-        form_traffic = TrafficForm(request.POST)
         if form.is_valid():
             user = form.save()
             profile = Profile(user=user, image="default-user-icon-21.jpg")
             profile.save()
-            if form_traffic.is_valid():
-                traffic = form_traffic.save(commit=False)
-                traffic.user_id = user.id
-                traffic.save()
-                user = form.cleaned_data.get("username")
-                messages.success(request, "Account was created for " + user)
-                return redirect("main:login")
-    context = {"form": form, "form_traffic": form_traffic}
+            username = form.cleaned_data.get("username")
+            messages.success(request, "Account was created for " + username)
+            login(request, user)
+            return redirect("main:add_new_traffic")
+    context = {"form": form}
     return render(request, "main/register.html", context)
 
 

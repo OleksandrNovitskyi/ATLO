@@ -3,7 +3,7 @@
 {% block content %}
     <section class="bg-gray-50 dark:bg-gray-900">
         <div
-            class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            class="flex items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <div
                 class="w-full bg-slate-400 rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                 <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -13,7 +13,6 @@
                     </h1>
                     <form class="space-y-2 md:space-y-4" method="POST" action="">
                         {% csrf_token %}
-                        <div class="columns-2">
                             <div>
                                 <label
                                     for="username"
@@ -38,33 +37,6 @@
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
                                 {{ form.password2 }}
                             </div>
-                            <p>Traffic parameters</p>
-
-                            <div>
-                                <label
-                                    for="from_top"
-                                    class=" w-1/2 mb-1 text-sm font-medium text-gray-900 dark:text-white">From top</label>
-                                {{ form_traffic.from_top }}
-                            </div>
-                            <div>
-                                <label
-                                    for="from_right"
-                                    class=" mb-1 text-sm font-medium text-gray-900 dark:text-white">From right</label>
-                                {{ form_traffic.from_right }}
-                            </div>
-                            <div>
-                                <label
-                                    for="from_bottom"
-                                    class=" mb-1 text-sm font-medium text-gray-900 dark:text-white">From bottom</label>
-                                {{ form_traffic.from_bottom }}
-                            </div>
-                            <div>
-                                <label
-                                    for="from_left"
-                                    class=" mb-1 text-sm font-medium text-gray-900 dark:text-white">From left</label>
-                                {{ form_traffic.from_left }}
-                            </div>
-                        </div>
                         <p class="bg-green-300"></p>{{ form.errors }}</p>
                     <button
                         type="submit"
