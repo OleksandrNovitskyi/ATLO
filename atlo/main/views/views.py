@@ -12,11 +12,27 @@ from .. import logic
 
 
 def index(request):
-
     if request.user.id is not None:
         user = request.user
         traffic = Traffic.objects.filter(user=user).last()
+        print(traffic)
+        if traffic is None:
+            create_guest_account(request)
+            return redirect("main:index")
     else:
+        create_guest_account(request)
+        return redirect("main:index")
+
+    return redirect(reverse("main:activate_traffic", args=[traffic.pk]))
+
+
+def create_guest_account(request):
+    """If Guest account doesn't exist - create instance of User class with standart traffic and standart image and login it account"""
+
+    try:
+        user = User.objects.get(id=1)
+        login(request, user)
+    except User.DoesNotExist:
         user = User.objects.create_user(
             id=1, username="Guest", email="guest@gmail.com", password="1111"
         )
@@ -29,11 +45,7 @@ def index(request):
 
         profile = Profile(user_id=user.id, image="default-user-icon-21.jpg")
         profile.save()
-
         login(request, user)
-        return redirect("main:index")
-
-    return redirect(reverse("main:activate_traffic", args=[traffic.pk]))
 
 
 def addNewTraffic(request):
